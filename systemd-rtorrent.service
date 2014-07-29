@@ -1,1 +1,16 @@
-/etc/systemd/system/rtorrent.service
+[Unit]
+Description=rTorrent Daemon
+Requires=network.target local-fs.target
+
+[Service]
+Type=forking
+KillMode=none
+User=rtorrent
+ExecStart=/usr/bin/tmux new-session -c /mnt/storage/rtorrent -s rtorrent -n rtorrent -d rtorrent
+ExecStop=/usr/bin/tmux send-keys -t rtorrent C-q && /usr/bin/tmux kill-session -t rtorrent
+WorkingDirectory=/mnt/storage/rtorrent/
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
